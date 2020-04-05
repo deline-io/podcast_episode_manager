@@ -3,14 +3,16 @@ import json
 import requests
 import zipfile
 
-REPO_ZIP_URL = 'https://github.com/deline-io/podcast_contents/archive/master.zip'
+from gen import render_rss_feed
+
+REPO_ZIP_URL = 'https://github.com/deline-io/podcast_contents/archive/develop.zip'
 
 DIR = '/tmp'
 ZIP_PATH = os.path.join(DIR, 'podcast_contents.zip')
 UNZIP_PATH = os.path.join(DIR, 'podcast_contents')
 
-CHANNEL_YAML = 'README.md'
-EPISODES_YAML = 'LICENSE'
+CHANNEL_YAML = 'channel.yml'
+EPISODES_YAML = 'episodes.yml'
 
 
 def lambda_handler(event, context):
@@ -29,22 +31,13 @@ def lambda_handler(event, context):
         root_dir = os.path.join(UNZIP_PATH, zip.namelist()[0])
         zip.extractall(UNZIP_PATH)
 
-    # チャンネルの情報を読みとる
-    with open(os.path.join(root_dir, CHANNEL_YAML)) as f:
-        print(f.read())
-
-    # エピソードの情報を読み取る
-    with open(os.path.join(root_dir, EPISODES_YAML)) as f:
-        print(f.read())
-
-    body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": os.listdir(UNZIP_PATH)
-    }
+    ch_yaml_path = os.path.join(root_dir, CHANNEL_YAML)
+    eps_yaml_path = os.path.join(root_dir, EPISODES_YAML)
+    xml = render_rss_feed(ch_yaml_path, eps_yaml_path)
 
     response = {
         "statusCode": 200,
-        "body": json.dumps(body)
+        "body": xml
     }
 
     return response

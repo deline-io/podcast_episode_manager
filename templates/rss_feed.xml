@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+    xmlns:googleplay="http://www.google.com/schemas/play-podcasts/1.0"
+    xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+    >
+
+    <channel>
+
+        <title>{{ ch.title }}</title>
+
+        <link>{{ ch.url }}</link>
+
+        <description>{{ ch.description }}</description>
+        <googleplay:description>{{ ch.description }}</googleplay:description>
+        <itunes:summary>{{ ch.description }}</itunes:summary>
+
+        <googleplay:author>{{ ch.author }}</googleplay:author>
+        <itunes:author>{{ ch.author }}</itunes:author>
+
+        <googleplay:category text="{{ ch.category }}"/>
+        <itunes:category text="{{ ch.category }}"/>
+
+        <image>
+            <title>{{ ch.title }}</title>
+            <link>{{ ch.url }}</link>
+            <url>{{ ch.image_url }}</url>
+        </image>
+        <googleplay:image href="{{ ch.image_url }}"/>
+        <itunes:image href="{{ ch.image_url }}"/>
+
+        <googleplay:explicit>no</googleplay:explicit>
+        <itunes:explicit>no</itunes:explicit>
+
+        <language>ja-JP</language>
+    {% for ep in eps %}
+        <item>
+
+            <guid>{{ ep.url }}</guid>
+
+            <title>{{ ep.title }}</title>
+
+            <description>{{ ep.description }}</description>
+            <googleplay:description>{{ ep.description }}</googleplay:description>
+            <itunes:summary>{{ ep.description }}</itunes:summary>
+
+            <pubDate>{{ ep.pub_date }}</pubDate>
+
+            <enclosure url="{{ ep.file_url }}" type="audio/mpeg" length="{{ ep.file_size }}"/>
+
+            <itunes:duration>{{ ep.duration_sec }}</itunes:duration>
+        </item>
+    {% endfor %}
+    </channel>
+</rss>
