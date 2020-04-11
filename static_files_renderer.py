@@ -1,11 +1,12 @@
 import os
+import json
 import boto3
 import requests
 import zipfile
 from rss_feed_renderer import render_rss_feed
 
 
-REPO_ZIP_URL = 'https://github.com/deline-io/podcast_contents/archive/develop.zip'
+REPO_ZIP_URL = 'https://github.com/deline-io/podcast_contents/archive/{}.zip'
 
 TMP_DIR = '/tmp'
 ZIP_PATH = os.path.join(TMP_DIR, 'podcast_contents.zip')
@@ -23,8 +24,21 @@ s3_cli = boto3.client('s3')
 
 
 def handle(event, context):
+    request_body = json.loads(event['body'])
+
+    target_branch = request_body['ref'].replace('refs/heads/', '')
+    if target_branch == 'master':
+        render(target_branch)
+
+    return {
+        "statusCode": 200,
+        "body": ""
+    }
+
+
+def render(target_branch):
     # contents リポジトリを zip 形式でダウンロードする
-    res = requests.get(REPO_ZIP_URL, stream=True)
+    res = requests.get(REPO_ZIP_URL.format(target_branch), stream=True)
 
     # zip ファイルを /tmp に書き込む
     with open(ZIP_PATH, 'wb') as f:
@@ -46,8 +60,3 @@ def handle(event, context):
 
     bucket = s3.Bucket(S3_BUCKET)
     bucket.upload_file(RSS_FEED_PATH, S3_RSS_FEED_PATH)
-
-    return {
-        "statusCode": 200,
-        "body": ""
-    }
