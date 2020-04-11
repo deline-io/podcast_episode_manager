@@ -4,6 +4,7 @@ import requests
 import zipfile
 
 from gen import render_rss_feed
+from mp3_meta_extractor import store_mp3_meta
 
 REPO_ZIP_URL = 'https://github.com/deline-io/podcast_contents/archive/develop.zip'
 
@@ -50,6 +51,10 @@ def lambda_handler(event, context):
         "event": event
     }
     """
+
+
+def lambda_mp3_meta_extractor(event, context):
+    store_mp3_meta(event, context)
 
 
 if __name__ == '__main__':
