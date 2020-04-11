@@ -13,7 +13,7 @@ s3 = boto3.resource('s3')
 s3_cli = boto3.client('s3')
 
 
-def store_mp3_meta(event, context):
+def handle(event, context):
     os.makedirs(INPUT_DIR, exist_ok=True)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 

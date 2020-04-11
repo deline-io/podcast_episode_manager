@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: deline-test
+service: deline
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -70,8 +70,8 @@ plugins:
 #    - exclude-me-dir/**
 
 functions:
-  mp3:
-    handler: handler.lambda_mp3_meta_extractor
+  mp3_meta_extraction:
+    handler: mp3_meta_extractor.handle
     events:
       - s3:
           bucket: deline
@@ -80,10 +80,10 @@ functions:
             - prefix: audio/
             - suffix: .mp3
           existing: true
-  hello:
-    handler: handler.lambda_handler
+  static_files_rendering:
+    handler: static_files_renderer.handle
     events:
-      - http: POST hoge
+      - http: POST webhook
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
