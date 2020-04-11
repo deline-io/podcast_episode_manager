@@ -1,3 +1,5 @@
 requests
 jinja2
 pyyaml
+mutagen
+boto3
