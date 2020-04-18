@@ -84,6 +84,11 @@ functions:
     handler: static_files_renderer.handle
     events:
       - http: POST webhook
+    #    Define function environment variables here
+    environment:
+      TARGET_BRANCH: ${opt:branch, 'master'}
+      S3_BUCKET: ${opt:bucket, 'deline'}
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -119,10 +124,6 @@ functions:
 #          conditions:
 #            host: example.com
 #            path: /hello
-
-#    Define function environment variables here
-#    environment:
-#      variable2: value2
 
 # you can add CloudFormation resource templates here
 #resources:

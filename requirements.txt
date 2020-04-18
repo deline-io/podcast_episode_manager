@@ -3,3 +3,5 @@ jinja2
 pyyaml
 mutagen
 boto3
+markdown
+markdown-full-yaml-metadata
