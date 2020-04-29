@@ -25,6 +25,18 @@ provider:
   runtime: python3.8
   stage: beta
   region: ap-northeast-1
+  resourcePolicy:
+  - Effect: Allow
+    Principal: "*"
+    Action: execute-api:Invoke
+    Resource:
+      - execute-api:/*/*/*
+    Condition:
+      IpAddress:
+        aws:SourceIp:
+          - "192.30.252.0/22"
+          - "185.199.108.0/22"
+          - "140.82.112.0/20"
 
   iamRoleStatements:
     - Effect: "Allow"
@@ -88,6 +100,7 @@ functions:
     environment:
       TARGET_BRANCH: ${opt:branch, 'master'}
       S3_BUCKET: ${opt:bucket, 'deline'}
+      TARGET_REPO_ID: ${opt:repo_id, '253216553'}
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

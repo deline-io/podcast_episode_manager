@@ -30,22 +30,32 @@ s3 = boto3.resource('s3')
 s3_cli = boto3.client('s3')
 
 TARGET_BRANCH = os.environ.get('TARGET_BRANCH', 'master')
+TARGET_REPO_ID = int(os.environ.get('TARGET_REPO_ID'))
 
 
 def handle(event, context):
-    print(TARGET_BRANCH)
-    print(S3_BUCKET)
+    errors = []
 
     request_body = json.loads(event['body'])
+    target_repo_id = request_body['repository']['id']
+    if (target_repo_id != TARGET_REPO_ID):
+        errors.append(f'invalid repository id: {target_repo_id}')
 
     target_branch = request_body['ref'].replace('refs/heads/', '')
-    if target_branch == TARGET_BRANCH:
-        render(target_branch)
+    if target_branch != TARGET_BRANCH:
+        errors.append(f'invalid target branch: {target_branch}')
 
-    return {
-        "statusCode": 200,
-        "body": ""
-    }
+    if errors:
+        return {
+            "statusCode": 400,
+            "body": json.dumps(errors)
+        }
+    else:
+        render(target_branch)
+        return {
+            "statusCode": 200,
+            "body": "OK"
+        }
 
 
 def render(target_branch):
