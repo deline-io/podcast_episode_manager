@@ -1,5 +1,5 @@
 import os
-import yaml
+import json
 import boto3
 import urllib.parse
 from mutagen.mp3 import MP3
@@ -31,14 +31,14 @@ def handle(event, context):
 
         output_file_path = os.path.join(OUTPUT_DIR, input_file_name)
         with open(output_file_path, 'w') as f:
-            yaml.dump({
+            json.dump({
                 'relative_audio_path': s3_input_path,
                 'file_size': s3_event_meta['object']['size'],
-                'length': extract_mp3_length(download_path)
+                'duration_sec': extract_mp3_length(download_path)
             }, f)
 
         upload_path = s3_input_path.replace(
-            'audio', 'audio_meta').replace('.mp3', '.yml')
+            'audio', 'audio_meta').replace('.mp3', '.json')
         bucket.upload_file(output_file_path, upload_path)
 
     except Exception as e:
