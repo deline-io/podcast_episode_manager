@@ -20,9 +20,11 @@ def load_episodes_info(dir):
     eps = []
     for ep_md in filter(filter_invalid_file, children):
         with open(ep_md) as f:
+            id_str, _ = os.path.splitext(os.path.basename(ep_md))
             md_txt = f.read()
             md = markdown.Markdown(extensions=['full_yaml_metadata'])
             html = md.convert(md_txt)
+            md.Meta['id'] = int(id_str)
             eps.append((html, md.Meta))
 
     return eps
