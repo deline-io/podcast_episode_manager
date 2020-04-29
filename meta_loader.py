@@ -19,7 +19,6 @@ def load_episodes_info(dir):
 
     eps = []
     for ep_md in filter(filter_invalid_file, children):
-        print(ep_md)
         with open(ep_md) as f:
             md_txt = f.read()
             md = markdown.Markdown(extensions=['full_yaml_metadata'])

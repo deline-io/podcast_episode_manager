@@ -1,9 +1,10 @@
 import os
 import json
-import boto3
+# import boto3
 import requests
 import zipfile
 from rss_feed_renderer import render_rss_feed
+from web_json_renderer import render_json
 from meta_loader import load_channel_info, load_episodes_info
 
 
@@ -20,8 +21,8 @@ S3_BUCKET = os.environ.get('S3_BUCKET', 'deline')
 RSS_FEED_PATH = os.path.join(TMP_DIR, 'rss.xml')
 S3_RSS_FEED_PATH = 'feed/rss.xml'
 
-s3 = boto3.resource('s3')
-s3_cli = boto3.client('s3')
+# s3 = boto3.resource('s3')
+# s3_cli = boto3.client('s3')
 
 TARGET_BRANCH = os.environ.get('TARGET_BRANCH', 'master')
 
@@ -64,11 +65,13 @@ def render(target_branch):
     ch = load_channel_info(ch_yaml_path)
     eps = load_episodes_info(eps_md)
 
-    with open(RSS_FEED_PATH, 'w', encoding='utf-8') as f:
-        f.write(render_rss_feed(ch, [ep[-1] for ep in eps]))
+    # with open(RSS_FEED_PATH, 'w', encoding='utf-8') as f:
+    #     f.write(render_rss_feed(ch, [ep[-1] for ep in eps]))
 
-    bucket = s3.Bucket(S3_BUCKET)
-    bucket.upload_file(RSS_FEED_PATH, S3_RSS_FEED_PATH)
+    render_json(eps)
+
+    # bucket = s3.Bucket(S3_BUCKET)
+    # bucket.upload_file(RSS_FEED_PATH, S3_RSS_FEED_PATH)
 
 
 if __name__ == '__main__':
